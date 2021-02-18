@@ -102,6 +102,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+  ButtonMatrixUpdate();
   }
   /* USER CODE END 3 */
 }
@@ -271,7 +272,7 @@ void ButtonMatrixUpdate()
 	{
 		ButtonMatrixTimestamp = HAL_GetTick();
 		int i;
-		for(i=0; i<4;++i)
+		for(i=0; i<4;i+=1)
 		{	//0-3
 			GPIO_PinState Pinstate = HAL_GPIO_ReadPin(ButtonMatrixPort[i], ButtonMatrixPin[i]);
 			if(Pinstate == GPIO_PIN_RESET)		//ButtonPress
@@ -291,7 +292,7 @@ void ButtonMatrixUpdate()
 		//Reset PIN+1
 		uint8_t NextOutputPin = ButtonMatrixRow + 4;
 
-		HAL_GPIO_WritePin(ButtonMatrixPort[NextOutputPin], ButtonMatrixPin[NextOutputPin],GPIO_PIN_SET);
+		HAL_GPIO_WritePin(ButtonMatrixPort[NextOutputPin], ButtonMatrixPin[NextOutputPin],GPIO_PIN_RESET);
 
 	}
 }
