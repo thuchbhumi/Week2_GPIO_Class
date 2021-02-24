@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -103,6 +104,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   ButtonMatrixUpdate();
+
   }
   /* USER CODE END 3 */
 }
@@ -263,7 +265,9 @@ static void MX_GPIO_Init(void)
 //port/pin array , 0-3 input , 4-7 output
 GPIO_TypeDef* ButtonMatrixPort[8] ={GPIOA,GPIOB,GPIOB,GPIOB,GPIOA,GPIOC,GPIOB,GPIOA};
 uint16_t ButtonMatrixPin[8] = {GPIO_PIN_10,GPIO_PIN_3,GPIO_PIN_5,GPIO_PIN_4,GPIO_PIN_9,GPIO_PIN_7,GPIO_PIN_6,GPIO_PIN_7};
-
+uint16_t Data1 =0;
+uint16_t Password =0;
+uint16_t Data3 =0;
 uint8_t ButtonMatrixRow = 0; //What R Now
 
 void ButtonMatrixUpdate()
@@ -278,21 +282,32 @@ void ButtonMatrixUpdate()
 			if(Pinstate == GPIO_PIN_RESET)		//ButtonPress
 			{
 				ButtonMatrixState |= (uint16_t)0x1 <<(i + ButtonMatrixRow * 4);
+				Data1=ButtonMatrixState;
 			}
 			else
 			{
 				ButtonMatrixState &= ~((uint16_t)0x1 <<(i + ButtonMatrixRow * 4));
+				if(ButtonMatrixState == 0){
+					Password+=Data1;
+					Data1=0;
+				}
+				else if (ButtonMatrixState==8){
+					Password=0;
+					Data1=0;
+				}
 			}
 		}
 		uint8_t NowOutputPin = ButtonMatrixRow + 4;
 		// SET PIN
 		HAL_GPIO_WritePin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin], GPIO_PIN_SET);
+
 		//update New Row
 		ButtonMatrixRow = (ButtonMatrixRow +1) % 4;
+
 		//Reset PIN+1
 		uint8_t NextOutputPin = ButtonMatrixRow + 4;
-
 		HAL_GPIO_WritePin(ButtonMatrixPort[NextOutputPin], ButtonMatrixPin[NextOutputPin],GPIO_PIN_RESET);
+
 
 	}
 }
