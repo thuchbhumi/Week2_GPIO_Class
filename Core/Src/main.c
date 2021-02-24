@@ -55,6 +55,7 @@ GPIO_TypeDef *Password[11] = {0,0,0,0,0,0,0,0,0,0,0} ;
 int count =0;
 GPIO_PinState Pinstate;
 int k=0;
+int Pass =0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -109,74 +110,92 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  Input=0;
-  ButtonMatrixUpdate();
-  if (Input == 1 && k==0){
-	  Password[count] = 7;
-	  count++;
-	  k=1;
-  }
-  else if (Input == 1 && k==0){
-  	  Password[count] = 7;
-  	  count++;
-  	  k=1;
-    }
-  else if (Input == 2 && k==0){
-    	  Password[count] = 8;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 4 && k==0){
-    	  Password[count] = 9;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 16 && k==0){
-    	  Password[count] = 4;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 32 && k==0){
-    	  Password[count] = 5;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 64 && k==0){
-    	  Password[count] = 6;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 256 && k==0){
-    	  Password[count] = 1;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 512 && k==0){
-    	  Password[count] = 2;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 1024 && k==0){
-    	  Password[count] = 3;
-    	  count++;
-    	  k=1;
-      }
-  else if (Input == 4096 && k==0){
-      	  Password[count] = 0;
-      	  count++;
-      	  k=1;
-        }
-  else if (Input == 8){
-	  count=0;
-	  int j ;
-	  for (j=0; j<11;j+=1){
-		  Password[j] = 0;
+	  Input=0;
+	  ButtonMatrixUpdate();
+	  if (Input == 1 && k==0){
+		  Password[count] = 7;
+		  count++;
+		  k=1;
 	  }
-  }
+	  else if (Input == 1 && k==0){
+		  Password[count] = 7;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 2 && k==0){
+		  Password[count] = 8;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 4 && k==0){
+		  Password[count] = 9;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 16 && k==0){
+		  Password[count] = 4;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 32 && k==0){
+		  Password[count] = 5;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 64 && k==0){
+		  Password[count] = 6;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 256 && k==0){
+		  Password[count] = 1;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 512 && k==0){
+		  Password[count] = 2;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 1024 && k==0){
+		  Password[count] = 3;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 4096 && k==0){
+		  Password[count] = 0;
+		  count++;
+		  k=1;
+	  }
+	  else if (Input == 8){
+		  count=0;
+		  int j ;
+		  for (j=0; j<11;j+=1){
+			  Password[j] = 0;
+		  }
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if (Input == 32768 && k==0){
+		  count=0;
+		  if(Password[0]==6 && Password[1]==2 && Password[2]==3 && Password[3]==4
+		  && Password[4]==0 && Password[5]==5 && Password[6]==0 && Password[7]==0
+		  && Password[8]==0 && Password[9]==2 && Password[10]==9) {
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+			  Pass=1;
+		  }
+		  else {
+			Pass =0;
+		  }
+		  int j ;
+		  count=0;
+		  for (j=0; j<11;j+=1){
+			  Password[j] = 0;
+		  }
+	  }
 
-  else if(k==1 && ButtonMatrixState==0 ){
-  	  k=0;
-    }
+	  else if(k==1 && ButtonMatrixState==0 ){
+		  k=0;
+	  }
   }
   /* USER CODE END 3 */
 }
