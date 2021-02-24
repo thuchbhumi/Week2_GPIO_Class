@@ -170,10 +170,11 @@ int main(void)
 	  else if (Input == 8){
 		  count=0;
 		  int j ;
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 		  for (j=0; j<11;j+=1){
 			  Password[j] = 0;
 		  }
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		  k=1;
 	  }
 	  else if (Input == 32768 && k==0){
 		  count=0;
@@ -185,17 +186,39 @@ int main(void)
 		  }
 		  else {
 			Pass =0;
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+			k=1;
 		  }
 		  int j ;
 		  count=0;
 		  for (j=0; j<11;j+=1){
 			  Password[j] = 0;
 		  }
+		  Pass=0;
+
 	  }
 
 	  else if(k==1 && ButtonMatrixState==0 ){
 		  k=0;
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
+
+
+	  //Challenge
+	  else if(Input == 128 && k==0){
+		  Password[count-1]=0;
+		  count-=1;
+		  if(count<=0){
+			  count=0;
+		  }
+		  k=1;
+	  }
+
+	  else if(k==1 && ButtonMatrixState!=0){
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	  }
+
+
   }
   /* USER CODE END 3 */
 }
@@ -362,7 +385,7 @@ uint8_t ButtonMatrixRow = 0; //What R Now
 
 void ButtonMatrixUpdate()
 {
-	if(HAL_GetTick()-ButtonMatrixTimestamp >= 100)
+	if(HAL_GetTick()-ButtonMatrixTimestamp >= 25)
 	{
 		ButtonMatrixTimestamp = HAL_GetTick();
 		int i;
