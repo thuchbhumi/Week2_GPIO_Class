@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -49,6 +48,13 @@ uint16_t ButtonMatrixState = 0;
 
 //Button time stamp
 uint32_t ButtonMatrixTimestamp = 0;
+
+uint16_t Data1 =0;
+uint16_t Input=0;
+GPIO_TypeDef *Password[11] = {0,0,0,0,0,0,0,0,0,0,0} ;
+int count =0;
+GPIO_PinState Pinstate;
+int k=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,8 +109,74 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+  Input=0;
   ButtonMatrixUpdate();
+  if (Input == 1 && k==0){
+	  Password[count] = 7;
+	  count++;
+	  k=1;
+  }
+  else if (Input == 1 && k==0){
+  	  Password[count] = 7;
+  	  count++;
+  	  k=1;
+    }
+  else if (Input == 2 && k==0){
+    	  Password[count] = 8;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 4 && k==0){
+    	  Password[count] = 9;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 16 && k==0){
+    	  Password[count] = 4;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 32 && k==0){
+    	  Password[count] = 5;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 64 && k==0){
+    	  Password[count] = 6;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 256 && k==0){
+    	  Password[count] = 1;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 512 && k==0){
+    	  Password[count] = 2;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 1024 && k==0){
+    	  Password[count] = 3;
+    	  count++;
+    	  k=1;
+      }
+  else if (Input == 4096 && k==0){
+      	  Password[count] = 0;
+      	  count++;
+      	  k=1;
+        }
+  else if (Input == 8){
+	  count=0;
+	  int j ;
+	  for (j=0; j<11;j+=1){
+		  Password[j] = 0;
+	  }
+  }
 
+  else if(k==1 && ButtonMatrixState==0 ){
+  	  k=0;
+    }
   }
   /* USER CODE END 3 */
 }
@@ -265,9 +337,8 @@ static void MX_GPIO_Init(void)
 //port/pin array , 0-3 input , 4-7 output
 GPIO_TypeDef* ButtonMatrixPort[8] ={GPIOA,GPIOB,GPIOB,GPIOB,GPIOA,GPIOC,GPIOB,GPIOA};
 uint16_t ButtonMatrixPin[8] = {GPIO_PIN_10,GPIO_PIN_3,GPIO_PIN_5,GPIO_PIN_4,GPIO_PIN_9,GPIO_PIN_7,GPIO_PIN_6,GPIO_PIN_7};
-uint16_t Data1 =0;
-uint16_t Password =0;
-uint16_t Data3 =0;
+
+int n;
 uint8_t ButtonMatrixRow = 0; //What R Now
 
 void ButtonMatrixUpdate()
@@ -278,23 +349,16 @@ void ButtonMatrixUpdate()
 		int i;
 		for(i=0; i<4;i+=1)
 		{	//0-3
-			GPIO_PinState Pinstate = HAL_GPIO_ReadPin(ButtonMatrixPort[i], ButtonMatrixPin[i]);
+			Pinstate = HAL_GPIO_ReadPin(ButtonMatrixPort[i], ButtonMatrixPin[i]);
 			if(Pinstate == GPIO_PIN_RESET)		//ButtonPress
 			{
 				ButtonMatrixState |= (uint16_t)0x1 <<(i + ButtonMatrixRow * 4);
-				Data1=ButtonMatrixState;
+				Input=ButtonMatrixState;
+
 			}
 			else
 			{
 				ButtonMatrixState &= ~((uint16_t)0x1 <<(i + ButtonMatrixRow * 4));
-				if(ButtonMatrixState == 0){
-					Password+=Data1;
-					Data1=0;
-				}
-				else if (ButtonMatrixState==8){
-					Password=0;
-					Data1=0;
-				}
 			}
 		}
 		uint8_t NowOutputPin = ButtonMatrixRow + 4;
